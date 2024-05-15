@@ -877,7 +877,7 @@ def dmg_calc(base, enemy, wep, combo, step):
     #Find how many hits are in the combo step
     comboHits = comboPattern[wep["type"]][step]
     
-    #Min weapon ATP, and Frame/Barrier ATP boosts, are unscaled by Shifta but are improved by attributes
+    #Min weapon ATP, and Frame/Barrier flat ATP boosts, are unscaled by Shifta but are improved by attributes
     minATP = wep["minATP"]*(1+(wep["ATR"]/100))
     maxATP = wep["maxATP"]*(1+(wep["ATR"]/100))
     otherATP = base["otherATP"]*(1+(wep["ATR"]/100))
@@ -967,7 +967,7 @@ def main():
     with st.sidebar.expander("Misc Config",expanded=True):
         otherATP = st.number_input("Other ATP bonuses (Frame, Barrier etc)",0)
         
-    st.sidebar.write("*All attack timings assume a 40%% attack boost from a Heavenly/Battle or V101")
+    st.sidebar.write("*All attack timings assume you have a 40% attack speed boost from a Heavenly/Battle or v101")
     st.sidebar.text("Created By: FIRE AKA Drazn")
     
     #---MAIN WINDOW---  
