@@ -479,6 +479,16 @@ frameDatav101 = {
                 "h3":28,
             }
         },
+        "Dark Flow":{
+            "standard":{
+                "n1":39,
+                "n2":0,
+                "n3":0,
+                "h1":46,
+                "h2":0,
+                "h3":0,
+            }
+        }
     }     
 }
 
@@ -738,7 +748,7 @@ classAnimMap = {
 }
 
 wepTypeList = [
-    "Saber","Sword","Daggers","Partisan","Slicer","DoubleSaber","Claw","Katana","TwinSwords","Fists","Handgun","Rifle","Mechguns","Shot","Launcher","Cane","Rod","Wand","Cards","Master Raven","Last Swan","L&K38 Combat" 
+    "Saber","Sword","Daggers","Partisan","Slicer","DoubleSaber","Claw","Katana","TwinSwords","Fists","Handgun","Rifle","Mechguns","Shot","Launcher","Cane","Rod","Wand","Cards","Master Raven","Last Swan","L&K38 Combat","Dark Flow" 
 ]
 
 techBoost = [
@@ -816,6 +826,7 @@ comboPattern = {
     "Master Raven":[3,0,0],
     "Last Swan":[3,3,3],
     "L&K38 Combat":[5,0,0],
+    "Dark Flow":[1,0,0],
 }
 
 classList = list(classAnimMap.keys())
@@ -883,8 +894,12 @@ def dmg_calc(base, enemy, wep, combo, step):
     targetDFP = int(enemy["DFP"]) * (1-(techBoost[base["zalure"]]/100))
     
     #ATP is reduced directly by DFP.  The result is then divided by 5, then the attack's multiplier is added to produce the final damage
-    baseDamageMin = (((finalATPmin-targetDFP)/5) * attackMod[combo])*comboHits
-    baseDamageMax = (((finalATPmax-targetDFP)/5) * attackMod[combo])*comboHits
+    if wep["type"] is "Dark Flow" and combo in ["Special","Sacrificial","Vjaya"]:
+        baseDamageMin = (((finalATPmin-targetDFP)/5) * attackMod["Heavy"])*5
+        baseDamageMax = (((finalATPmax-targetDFP)/5) * attackMod["Heavy"])*5
+    else:
+        baseDamageMin = (((finalATPmin-targetDFP)/5) * attackMod[combo])*comboHits
+        baseDamageMax = (((finalATPmax-targetDFP)/5) * attackMod[combo])*comboHits
     
     #The average damage boost from crit for a 100 luck character will be 12.5%
     avgCritMulti = (0.5*((int(base["luck"])/5)/100))
@@ -896,7 +911,11 @@ def dmg_calc(base, enemy, wep, combo, step):
     return results
 
 def acc_calc(base, enemy, wep, combo, step):
-    typeMod = accTypeMod[combo]
+    if wep["type"] is "Dark Flow" and combo in ["Special","Sacrificial","Vjaya"]:
+        typeMod = accTypeMod["Heavy"]
+    else:
+        typeMod = accTypeMod[combo]
+    
     stepMod = accStepMod[step]
     
     totalATA = int(base["ATA"]) + int(wep["ATA"])
@@ -948,6 +967,7 @@ def main():
     with st.sidebar.expander("Misc Config",expanded=True):
         otherATP = st.number_input("Other ATP bonuses (Frame, Barrier etc)",0)
         
+    st.sidebar.write("*All attack timings assume a 40%% attack boost from a Heavenly/Battle or V101")
     st.sidebar.text("Created By: FIRE AKA Drazn")
     
     #---MAIN WINDOW---  
@@ -1087,19 +1107,19 @@ def main():
     w1A1Dmg = dmg_calc(basePack,enemyPack,w1Pack,w1Pack["a1"],0)
     w1A1Acc = acc_calc(basePack,enemyPack,w1Pack,w1Pack["a1"],0)
     if w1A1Dmg[2] > 0:
-        w1A1result.write(f"1 | {w1A1Acc:.1f}% | {w1A1Dmg[0]} to {w1A1Dmg[1]}")
+        w1A1result.write(f"1 | {w1A1Acc:.0f}% | {w1A1Dmg[0]} to {w1A1Dmg[1]}")
     
 
     w1A2Dmg = dmg_calc(basePack,enemyPack,w1Pack,w1Pack["a2"],1)
     w1A2Acc = acc_calc(basePack,enemyPack,w1Pack,w1Pack["a2"],1)
     if w1A2Dmg[2] > 0:
-        w1A2result.write(f"2 | {w1A2Acc:.1f}% | {w1A2Dmg[0]} to {w1A2Dmg[1]}")
+        w1A2result.write(f"2 | {w1A2Acc:.0f}% | {w1A2Dmg[0]} to {w1A2Dmg[1]}")
 
 
     w1A3Dmg = dmg_calc(basePack,enemyPack,w1Pack,w1Pack["a3"],2)
     w1A3Acc = acc_calc(basePack,enemyPack,w1Pack,w1Pack["a3"],2)
     if w1A3Dmg[2] > 0:    
-        w1A3result.write(f"3 | {w1A3Acc:.1f}% | {w1A3Dmg[0]} to {w1A3Dmg[1]}")
+        w1A3result.write(f"3 | {w1A3Acc:.0f}% | {w1A3Dmg[0]} to {w1A3Dmg[1]}")
     
     w1ComboDamage.write(f"Full Combo: {w1A1Dmg[0]+w1A2Dmg[0]+w1A3Dmg[0]} to {w1A1Dmg[1]+w1A2Dmg[1]+w1A3Dmg[1]}")
     w1Time=find_combo_time(basePack, w1Pack)
@@ -1110,19 +1130,19 @@ def main():
     w2A1Dmg = dmg_calc(basePack,enemyPack,w2Pack,w2Pack["a1"],0)
     w2A1Acc = acc_calc(basePack,enemyPack,w2Pack,w2Pack["a1"],0)
     if w2A1Dmg[2] > 0:
-        w2A1result.write(f"1 | {w2A1Acc:.1f}% | {w2A1Dmg[0]} to {w2A1Dmg[1]}")
+        w2A1result.write(f"1 | {w2A1Acc:.0f}% | {w2A1Dmg[0]} to {w2A1Dmg[1]}")
     
     
     w2A2Dmg = dmg_calc(basePack,enemyPack,w2Pack,w2Pack["a2"],1)
     w2A2Acc = acc_calc(basePack,enemyPack,w2Pack,w2Pack["a2"],1)
     if w2A2Dmg[2] > 0:
-        w2A2result.write(f"2 | {w2A2Acc:.1f}% | {w2A2Dmg[0]} to {w2A2Dmg[1]}")
+        w2A2result.write(f"2 | {w2A2Acc:.0f}% | {w2A2Dmg[0]} to {w2A2Dmg[1]}")
 
 
     w2A3Dmg = dmg_calc(basePack,enemyPack,w2Pack,w2Pack["a3"],2)
     w2A3Acc = acc_calc(basePack,enemyPack,w2Pack,w2Pack["a3"],2)
     if w2A3Dmg[2] > 0:
-        w2A3result.write(f"3 | {w2A3Acc:.1f}% | {w2A3Dmg[0]} to {w2A3Dmg[1]}")
+        w2A3result.write(f"3 | {w2A3Acc:.0f}% | {w2A3Dmg[0]} to {w2A3Dmg[1]}")
         
     w2ComboDamage.write(f"Full Combo: {w2A1Dmg[0]+w2A2Dmg[0]+w2A3Dmg[0]} to {w2A1Dmg[1]+w2A2Dmg[1]+w2A3Dmg[1]}")
     w2Time=find_combo_time(basePack, w2Pack)
@@ -1133,24 +1153,27 @@ def main():
     w3A1Dmg = dmg_calc(basePack,enemyPack,w3Pack,w3Pack["a1"],0)
     w3A1Acc = acc_calc(basePack,enemyPack,w3Pack,w3Pack["a1"],0)
     if w3A1Dmg[2] > 0:
-        w3A1result.write(f"1 | {w3A1Acc:.1f}% | {w3A1Dmg[0]} to {w3A1Dmg[1]}")
+        w3A1result.write(f"1 | {w3A1Acc:.0f}% | {w3A1Dmg[0]} to {w3A1Dmg[1]}")
     
 
     w3A2Dmg = dmg_calc(basePack,enemyPack,w3Pack,w3Pack["a2"],1)
     w3A2Acc = acc_calc(basePack,enemyPack,w3Pack,w3Pack["a2"],1)
     if w3A2Dmg[2] > 0:    
-        w3A2result.write(f"2 | {w3A2Acc:.1f}% | {w3A2Dmg[0]} to {w3A2Dmg[1]}")
+        w3A2result.write(f"2 | {w3A2Acc:.0f}% | {w3A2Dmg[0]} to {w3A2Dmg[1]}")
     
 
     w3A3Dmg = dmg_calc(basePack,enemyPack,w3Pack,w3Pack["a3"],2)
     w3A3Acc = acc_calc(basePack,enemyPack,w3Pack,w3Pack["a3"],2)
     if w3A3Dmg[2] > 0:    
-        w3A3result.write(f"3 | {w3A3Acc:.1f}% | {w3A3Dmg[0]} to {w3A3Dmg[1]}")
+        w3A3result.write(f"3 | {w3A3Acc:.0f}% | {w3A3Dmg[0]} to {w3A3Dmg[1]}")
     
     w3ComboDamage.write(f"Full Combo: {w3A1Dmg[0]+w3A2Dmg[0]+w3A3Dmg[0]} to {w3A1Dmg[1]+w3A2Dmg[1]+w3A3Dmg[1]}")
     w3Time=find_combo_time(basePack, w3Pack)
     w3ComboTime.text(f"Combo Time: {w3Time/30:.1f} sec")
     w3DPS.header(f"DPS: {dps_calc([w3A1Dmg[2],w3A2Dmg[2],w3A3Dmg[2]],[w3A1Acc,w3A2Acc,w3A3Acc],w3Time):.0f}")
+    
+    #---FOOTER---
+    
     
 #---END---
 if __name__ == "__main__":
