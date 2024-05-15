@@ -844,7 +844,7 @@ def convert_combo_input(combo):
     output = []
     timing = 1
     for c in combo:
-        if c is "Light":
+        if c is "Normal":
             output.append(f"n{timing}")
         else:
             output.append(f"h{timing}")
@@ -915,6 +915,9 @@ def acc_calc(base, enemy, wep, combo, step):
     
     if result > 100:
         return 100
+    
+    if result < 0:
+        return 0
     
     return result
 
@@ -1083,16 +1086,19 @@ def main():
     #Wep 1
     w1A1Dmg = dmg_calc(basePack,enemyPack,w1Pack,w1Pack["a1"],0)
     w1A1Acc = acc_calc(basePack,enemyPack,w1Pack,w1Pack["a1"],0)
-    w1A1result.write(f"1 | {w1A1Acc:.1f}% | {w1A1Dmg[0]} to {w1A1Dmg[1]}")
+    if w1A1Dmg[2] > 0:
+        w1A1result.write(f"1 | {w1A1Acc:.1f}% | {w1A1Dmg[0]} to {w1A1Dmg[1]}")
     
-    if comboPattern[w1Type][1] is not 0:
-        w1A2Dmg = dmg_calc(basePack,enemyPack,w1Pack,w1Pack["a2"],1)
-        w1A2Acc = acc_calc(basePack,enemyPack,w1Pack,w1Pack["a2"],1)
+
+    w1A2Dmg = dmg_calc(basePack,enemyPack,w1Pack,w1Pack["a2"],1)
+    w1A2Acc = acc_calc(basePack,enemyPack,w1Pack,w1Pack["a2"],1)
+    if w1A2Dmg[2] > 0:
         w1A2result.write(f"2 | {w1A2Acc:.1f}% | {w1A2Dmg[0]} to {w1A2Dmg[1]}")
-    
-    if comboPattern[w1Type][2] is not 0:   
-        w1A3Dmg = dmg_calc(basePack,enemyPack,w1Pack,w1Pack["a3"],2)
-        w1A3Acc = acc_calc(basePack,enemyPack,w1Pack,w1Pack["a3"],2)
+
+
+    w1A3Dmg = dmg_calc(basePack,enemyPack,w1Pack,w1Pack["a3"],2)
+    w1A3Acc = acc_calc(basePack,enemyPack,w1Pack,w1Pack["a3"],2)
+    if w1A3Dmg[2] > 0:    
         w1A3result.write(f"3 | {w1A3Acc:.1f}% | {w1A3Dmg[0]} to {w1A3Dmg[1]}")
     
     w1ComboDamage.write(f"Full Combo: {w1A1Dmg[0]+w1A2Dmg[0]+w1A3Dmg[0]} to {w1A1Dmg[1]+w1A2Dmg[1]+w1A3Dmg[1]}")
@@ -1103,16 +1109,19 @@ def main():
     #Wep 2
     w2A1Dmg = dmg_calc(basePack,enemyPack,w2Pack,w2Pack["a1"],0)
     w2A1Acc = acc_calc(basePack,enemyPack,w2Pack,w2Pack["a1"],0)
-    w2A1result.write(f"1 | {w2A1Acc:.1f}% | {w2A1Dmg[0]} to {w2A1Dmg[1]}")
+    if w2A1Dmg[2] > 0:
+        w2A1result.write(f"1 | {w2A1Acc:.1f}% | {w2A1Dmg[0]} to {w2A1Dmg[1]}")
     
-    if comboPattern[w2Type][1] is not 0:
-        w2A2Dmg = dmg_calc(basePack,enemyPack,w2Pack,w2Pack["a2"],1)
-        w2A2Acc = acc_calc(basePack,enemyPack,w2Pack,w2Pack["a2"],1)
+    
+    w2A2Dmg = dmg_calc(basePack,enemyPack,w2Pack,w2Pack["a2"],1)
+    w2A2Acc = acc_calc(basePack,enemyPack,w2Pack,w2Pack["a2"],1)
+    if w2A2Dmg[2] > 0:
         w2A2result.write(f"2 | {w2A2Acc:.1f}% | {w2A2Dmg[0]} to {w2A2Dmg[1]}")
-    
-    if comboPattern[w2Type][2] is not 0:
-        w2A3Dmg = dmg_calc(basePack,enemyPack,w2Pack,w2Pack["a3"],2)
-        w2A3Acc = acc_calc(basePack,enemyPack,w2Pack,w2Pack["a3"],2)
+
+
+    w2A3Dmg = dmg_calc(basePack,enemyPack,w2Pack,w2Pack["a3"],2)
+    w2A3Acc = acc_calc(basePack,enemyPack,w2Pack,w2Pack["a3"],2)
+    if w2A3Dmg[2] > 0:
         w2A3result.write(f"3 | {w2A3Acc:.1f}% | {w2A3Dmg[0]} to {w2A3Dmg[1]}")
         
     w2ComboDamage.write(f"Full Combo: {w2A1Dmg[0]+w2A2Dmg[0]+w2A3Dmg[0]} to {w2A1Dmg[1]+w2A2Dmg[1]+w2A3Dmg[1]}")
@@ -1123,16 +1132,19 @@ def main():
     #Wep 3
     w3A1Dmg = dmg_calc(basePack,enemyPack,w3Pack,w3Pack["a1"],0)
     w3A1Acc = acc_calc(basePack,enemyPack,w3Pack,w3Pack["a1"],0)
-    w3A1result.write(f"1 | {w3A1Acc:.1f}% | {w3A1Dmg[0]} to {w3A1Dmg[1]}")
+    if w3A1Dmg[2] > 0:
+        w3A1result.write(f"1 | {w3A1Acc:.1f}% | {w3A1Dmg[0]} to {w3A1Dmg[1]}")
     
-    if comboPattern[w3Type][1] is not 0:
-        w3A2Dmg = dmg_calc(basePack,enemyPack,w3Pack,w3Pack["a2"],1)
-        w3A2Acc = acc_calc(basePack,enemyPack,w3Pack,w3Pack["a2"],1)
+
+    w3A2Dmg = dmg_calc(basePack,enemyPack,w3Pack,w3Pack["a2"],1)
+    w3A2Acc = acc_calc(basePack,enemyPack,w3Pack,w3Pack["a2"],1)
+    if w3A2Dmg[2] > 0:    
         w3A2result.write(f"2 | {w3A2Acc:.1f}% | {w3A2Dmg[0]} to {w3A2Dmg[1]}")
-        
-    if comboPattern[w3Type][2] is not 0:
-        w3A3Dmg = dmg_calc(basePack,enemyPack,w3Pack,w3Pack["a3"],2)
-        w3A3Acc = acc_calc(basePack,enemyPack,w3Pack,w3Pack["a3"],2)
+    
+
+    w3A3Dmg = dmg_calc(basePack,enemyPack,w3Pack,w3Pack["a3"],2)
+    w3A3Acc = acc_calc(basePack,enemyPack,w3Pack,w3Pack["a3"],2)
+    if w3A3Dmg[2] > 0:    
         w3A3result.write(f"3 | {w3A3Acc:.1f}% | {w3A3Dmg[0]} to {w3A3Dmg[1]}")
     
     w3ComboDamage.write(f"Full Combo: {w3A1Dmg[0]+w3A2Dmg[0]+w3A3Dmg[0]} to {w3A1Dmg[1]+w3A2Dmg[1]+w3A3Dmg[1]}")
